@@ -1,0 +1,16 @@
+[
+{
+  "modid": "CityWorldGen",
+  "name": "Abandoned Cities Generator Mod",
+  "description": "This mod adds a new world type which generates cities.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Krzy19"],
+  "credits": "Myself",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
