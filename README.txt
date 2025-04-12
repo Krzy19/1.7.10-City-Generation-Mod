@@ -1,37 +1,31 @@
--------------------------------------------
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
+--------------------
+About
+--------------------
+1.7.10 City Generation Mod
 
-Note also that the patches are built against "unrenamed" MCP source code (aka
-srgnames) - this means that you will not be able to read them directly against
-normal code.
+This mod provides new world type "Abandoned Cities" which (as the name suggests) adds abandoned cities.
 
-Source pack installation information:
+---------------------
+How to install?
+---------------------
 
-Standalone source installation
-==============================
+Go to "relases" tab and download the newest version (or whatever you want).
+CurseForge/Modrinth Currently not set up.
 
-To install this source code for development purposes, extract this zip file.
-It ships with a demonstration mod. Run 'gradlew setupDevWorkspace' to create
-a gradle environment primed with FML. Run 'gradlew eclipse' or 'gradlew idea' to
-create an IDE workspace of your choice.
-Refer to ForgeGradle for more information about the gradle environment
-Note: On macs or linux you run the './gradlew.sh' instead of 'gradlew'
+DISCLAIMER:
+Be careful when downloading from unofficial sources or you might risk damaging your computer.
 
-Forge source installation
-=========================
-MinecraftForge ships with this code and installs it as part of the forge
-installation process, no further action is required on your part.
+--------------------
+Requirements:
+-Minecraft Forge for 1.7.10
 
-For reference this is version @MAJOR@.@MINOR@.@REV@.@BUILD@ of FML
-for Minecraft version @MCVERSION@.
+Author:
+-Krzy19
 
-LexManos' Install Video
-=======================
-https://www.youtube.com/watch?v=8VEdtQLuLO0&feature=youtu.be
+Credits:
+-Krzy19 for making this mod
+-McJty for inspiring this project
 
-For more details update more often refer to the Forge Forums:
-http://www.minecraftforge.net/forum/index.php/topic,14048.0.html
+
+
+(This mod is not affiliated with Lost Cities Mod in any way)
