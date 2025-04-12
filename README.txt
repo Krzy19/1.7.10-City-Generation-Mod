@@ -10,6 +10,10 @@ How to install?
 ---------------------
 
 Go to "relases" tab and download the newest version (or whatever you want).
+For pre-relases you will also need to check out pre-relases tag and download .jar file from there.
+
+After downloading the mod and setting up Forge, put the .jar file into your /mods folder.
+
 CurseForge/Modrinth Currently not set up.
 
 DISCLAIMER:
@@ -19,6 +23,7 @@ Be careful when downloading from unofficial sources or you might risk damaging y
 Requirements:
 -Minecraft Forge for 1.7.10
 
+--------------------
 Author:
 -Krzy19
 
