@@ -8,12 +8,6 @@ import net.minecraft.world.gen.layer.GenLayerBiome;
 
 public class WorldGenCities extends WorldType{
 
-    /**
-     * Creates a new world type, the ID is hidden and should not be referenced by modders.
-     * It will automatically expand the underlying workdType array if there are no IDs left.
-     *
-     * @param name
-     */
     public WorldGenCities(String name) {
         super("AbandonedCities");
     }
@@ -21,7 +15,7 @@ public class WorldGenCities extends WorldType{
     @Override
     public GenLayer getBiomeLayer(long seed, GenLayer parentLayer)
     {
-        return new GenLayerBiome(200L,parentLayer,this);
+        return new GenLayerBiome(seed,parentLayer,this);
     }
 
     @Override

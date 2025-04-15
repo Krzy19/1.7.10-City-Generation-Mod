@@ -7,224 +7,176 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderGenerate;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
+import org.lwjgl.Sys;
 
 import java.util.Random;
 
-public class CitiesGenChunkProvider extends ChunkProviderGenerate {
-    private World wrld;
-    private NoiseGeneratorPerlin noiseGenerator;
+public class CitiesGenChunkProvider extends ChunkProviderGenerate
+{
+    final int CHUNK_PACK_SIZE=5;
+    final double BUILDING_SPAWN_CHANCE=0.6;
+    final double FEATURE_SPAWN_CHANCE=0.1;
 
-    //platforms parameters
-    private double threshold = 0.35; // Próg, powyżej którego chunk będzie wypełniony kamieniem
-    private double scale = 0.025; // Skala szumu - im mniejsza, tym większe "wyspy" kamienia
-    private int stepHeight = 5;
+    public World world;
+    private NoiseGeneratorPerlin cityNoise;
 
-    private final int maxGenerationHeight = 70;
-    private final int maxDeleteHeight = maxGenerationHeight + 20;
+    private double citySpawnThreshold=0.35;
+    private double cityNoiseScale=0.025;
 
-    private double featureSpawnchance=0.2;
-    private double BuildingSpawnChance=0.5;
+    private int baseCityHeight=70;
+
+    private static final BiomeGenBase[] blacklistedBiomes={
+            BiomeGenBase.deepOcean,BiomeGenBase.ocean,BiomeGenBase.frozenOcean,
+            BiomeGenBase.extremeHills,BiomeGenBase.desertHills,BiomeGenBase.extremeHillsEdge,BiomeGenBase.extremeHillsEdge,
+            BiomeGenBase.extremeHillsEdge,BiomeGenBase.iceMountains,BiomeGenBase.jungleHills,BiomeGenBase.forestHills,
+            BiomeGenBase.mesaPlateau,BiomeGenBase.taigaHills,BiomeGenBase.savannaPlateau,BiomeGenBase.mesaPlateau_F,
+            BiomeGenBase.megaTaigaHills
+    };
 
     public CitiesGenChunkProvider(World world, long seed) {
         super(world, seed, false);
-        this.wrld = world;
+        this.world = world;
+
         Random rand = new Random(seed);
-        this.noiseGenerator = new NoiseGeneratorPerlin(rand, 1);
+        this.cityNoise = new NoiseGeneratorPerlin(rand, 1);
     }
 
     @Override
-    public Chunk provideChunk(int chunkX, int chunkZ) {
+    public Chunk provideChunk(int chunkX, int chunkZ)
+    {
         Chunk chunk = super.provideChunk(chunkX, chunkZ);
 
-        // Generuj szum Perlina dla tego chunka
-        double noiseValue = noiseGenerator.func_151601_a(chunkX * scale, chunkZ * scale);
+        if(validCityPosition(chunkX,chunkZ))
+        {
+                fillPlatform(chunk);
+        }
+        if(validRoadPosition(chunkX,chunkZ))
+        {
+                generateRoad(chunk,chunkX,chunkZ);
+        }
 
-        int maxheight = 0;
-        boolean blacklistedBiome = false;
+        return chunk;
+    }
 
+
+
+    public boolean validCityPosition(int chunkX,int chunkZ)
+    {
+        double noiseValue=cityNoisePack(chunkX,chunkZ);
+
+        return (noiseValue >= citySpawnThreshold && chunkX%CHUNK_PACK_SIZE!=0 && chunkZ%CHUNK_PACK_SIZE!=0);
+    }
+
+    public boolean validRoadPosition(int chunkX,int chunkZ)
+    {
+        if(chunkX%50==0||chunkZ%50==0)
+            return true;
+
+        if(chunkX%CHUNK_PACK_SIZE!=0&&chunkZ%CHUNK_PACK_SIZE!=0)
+            return false;
+        else
+        {
+            double noiseValue=cityNoisePack(chunkX,chunkZ);
+            double noiseAddX=cityNoisePack(chunkX-1,chunkZ);
+            double noiseAddZ=cityNoisePack(chunkX,chunkZ-1);
+            boolean noiseAddCorner=(cityNoise.func_151601_a(
+                    (chunkX-CHUNK_PACK_SIZE)*cityNoiseScale,(chunkZ-CHUNK_PACK_SIZE)*cityNoiseScale)>=citySpawnThreshold)&&
+                    chunkX%CHUNK_PACK_SIZE==0&&chunkZ%CHUNK_PACK_SIZE==0;
+
+            System.out.println("Noise: "+noiseValue+" AddX :"+noiseAddX+" AddZ "+noiseAddZ);
+            return(noiseValue>=citySpawnThreshold||noiseAddZ>=citySpawnThreshold||noiseAddX>=citySpawnThreshold||noiseAddCorner);
+        }
+    }
+
+    public double cityNoisePack(int chunkX,int chunkZ)
+    {
+        while(chunkX%CHUNK_PACK_SIZE!=0)
+        {
+            chunkX-=1;
+        }
+
+        while(chunkZ%CHUNK_PACK_SIZE!=0)
+        {
+            chunkZ-=1;
+        }
+        return cityNoise.func_151601_a(chunkX*cityNoiseScale,chunkZ*cityNoiseScale);
+    }
+
+    private void fillPlatform(Chunk chunk)
+    {
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                if (chunk.getHeightValue(x, z) > maxheight)
-                    maxheight = chunk.getHeightValue(x, z);
-
-                BiomeGenBase biome = wrld.getBiomeGenForCoords((chunkX << 4) + x, (chunkZ << 4) + z);
-
-                if (biome == BiomeGenBase.ocean ||
-                        biome == BiomeGenBase.deepOcean ||
-                        biome == BiomeGenBase.frozenOcean||
-                        biome == BiomeGenBase.extremeHills||
-                        biome == BiomeGenBase.extremeHillsEdge||
-                        biome == BiomeGenBase.extremeHillsPlus||
-                        biome == BiomeGenBase.savannaPlateau||
-                        biome == BiomeGenBase.mesaPlateau||
-                        biome == BiomeGenBase.mesaPlateau_F)
-                    blacklistedBiome = true;
+                for (int y = 20; y <= baseCityHeight; y++) {
+                    if(y==baseCityHeight)
+                        chunk.func_150807_a(x, y, z, Blocks.double_stone_slab, 0);
+                    else
+                        chunk.func_150807_a(x, y, z, Blocks.stone, 0);
+                }
+                for (int y = baseCityHeight+1; y <= 255; y++)
+                {
+                    chunk.func_150807_a(x, y, z, Blocks.air, 0);
+                }
             }
         }
 
-        // Jeśli wartość szumu przekracza próg, wypełnij chunk kamieniem
-        if (noiseValue > threshold && !blacklistedBiome)
-        {
-            Chunk northChunk = super.provideChunk(chunkX, chunkZ - 1);
-            Chunk southChunk = super.provideChunk(chunkX, chunkZ + 1);
-            Chunk westChunk = super.provideChunk(chunkX - 1, chunkZ);
-            Chunk eastChunk = super.provideChunk(chunkX + 1, chunkZ);
+        //Building Generation
+        if(world.rand.nextDouble()<=BUILDING_SPAWN_CHANCE)
+            BuildingGen.generateBuilding(cityNoisePack(chunk.xPosition,chunk.zPosition),chunk,baseCityHeight+1);
+        else if(world.rand.nextDouble()<=FEATURE_SPAWN_CHANCE)
+            BuildingGen.generateFeature(chunk,baseCityHeight+1);
+    }
 
-            fillChunkWithStone(chunk, maxheight, chunkX, chunkZ,noiseValue,northChunk,southChunk,westChunk,eastChunk);
+
+    private void generateRoad(Chunk chunk,int chunkX,int chunkZ)
+    {
+        boolean northConnect=validRoadPosition(chunkX, chunkZ - 1);
+        boolean southConnect=validRoadPosition(chunkX, chunkZ + 1);
+        boolean westConnect=validRoadPosition(chunkX - 1, chunkZ);
+        boolean eastConnect=validRoadPosition(chunkX + 1, chunkZ);
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = 20; y <= baseCityHeight; y++) {
+                    if(y==baseCityHeight)
+                    {
+                        chunk.func_150807_a(x, y, z, Blocks.double_stone_slab, 0);
+
+                        if((z>=2&&z<=13)&&(x>=2&&x<=13))
+                            chunk.func_150807_a(x, y, z, Blocks.stained_hardened_clay, 9);
+                        if(z>=2&&z<=13)
+                        {
+                            if(westConnect&&x<8)
+                                chunk.func_150807_a(x, y, z, Blocks.stained_hardened_clay, 9);
+                            if(eastConnect&&x>8)
+                                chunk.func_150807_a(x, y, z, Blocks.stained_hardened_clay, 9);
+                        }
+                        if(x>=2&&x<=13)
+                        {
+                            if(northConnect&&z<8)
+                                chunk.func_150807_a(x, y, z, Blocks.stained_hardened_clay, 9);
+                            if(southConnect&&z>8)
+                                chunk.func_150807_a(x, y, z, Blocks.stained_hardened_clay, 9);
+                        }
+                    }
+                    else
+                        chunk.func_150807_a(x, y, z, Blocks.stone, 0);
+                }
+                for (int y = baseCityHeight+1; y <= 255; y++)
+                {
+                    chunk.func_150807_a(x, y, z, Blocks.air, 0);
+                }
+            }
         }
+    }
 
-        //chunk.generateSkylightMap();
-        return chunk;
+    private int calculateHeight(Chunk chunk)
+    {
+        return 0;
     }
 
     @Override
     public void populate(IChunkProvider chunkProvider, int chunkX, int chunkZ) {
-
-        Chunk chunk = super.provideChunk(chunkX, chunkZ);
-        double noiseValue = noiseGenerator.func_151601_a(chunkX * scale, chunkZ * scale);
-        int maxheight=0;
-        boolean blacklistedBiome=false;
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                if (chunk.getHeightValue(x, z) > maxheight)
-                    maxheight = chunk.getHeightValue(x, z);
-
-                BiomeGenBase biome = wrld.getBiomeGenForCoords((chunkX << 4) + x, (chunkZ << 4) + z);
-
-                if (biome == BiomeGenBase.ocean ||
-                        biome == BiomeGenBase.deepOcean ||
-                        biome == BiomeGenBase.frozenOcean||
-                        biome == BiomeGenBase.extremeHills||
-                        biome == BiomeGenBase.extremeHillsEdge||
-                        biome == BiomeGenBase.extremeHillsPlus||
-                        biome == BiomeGenBase.savannaPlateau||
-                        biome == BiomeGenBase.mesaPlateau||
-                        biome == BiomeGenBase.mesaPlateau_F)
-                    blacklistedBiome = true;
-            }
-        }
-        if(maxheight>maxDeleteHeight||blacklistedBiome||noiseValue<threshold)
-            super.populate(chunkProvider, chunkX, chunkZ);
-    }
-
-    private void fillChunkWithStone(Chunk chunk, int maxheight, int chunkX, int chunkZ, double noiseValue,
-                                    Chunk northNeighbour,Chunk southNeighbour,Chunk westNeighbour,Chunk eastNeighbour) {
-        int height = Math.min(maxheight + stepHeight - maxheight % stepHeight, maxGenerationHeight);
-        boolean blocked = maxheight >= maxDeleteHeight;
-        boolean isHole=false;
-
-        int higherNeig=0;
-
-        if(checkIfHigher(southNeighbour,height))higherNeig++;
-        if(checkIfHigher(northNeighbour,height))higherNeig++;
-        if(checkIfHigher(eastNeighbour,height))higherNeig++;
-        if(checkIfHigher(westNeighbour,height))higherNeig++;
-
-        if(higherNeig>=4)
-            isHole=true;
-
-        boolean northNeighbor = isStoned(northNeighbour,chunkX, chunkZ - 1, height);
-        boolean southNeighbor = isStoned(southNeighbour,chunkX, chunkZ + 1, height);
-        boolean westNeighbor = isStoned(westNeighbour,chunkX - 1, chunkZ, height);
-        boolean eastNeighbor = isStoned(eastNeighbour,chunkX + 1, chunkZ, height);
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                for (int y = 10; y < height; y++) {
-
-                    if (height - y <= 1) {
-                        if (blocked||isHole)
-                            chunk.func_150807_a(x, y, z, Blocks.grass, 0);
-                        else
-                            chunk.func_150807_a(x, y, z, Blocks.double_stone_slab, 0);
-                    } else
-                        chunk.func_150807_a(x, y, z, Blocks.stone, 0);
-
-                    if (x == 0 && !westNeighbor)
-                        chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
-                    if (x == 15 && !eastNeighbor)
-                        chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
-                    if (z == 0 && !northNeighbor)
-                        chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
-                    if (z == 15 && !southNeighbor)
-                        chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
-                }
-                if (maxheight < maxDeleteHeight) {
-                    for (int y = height; y < maxDeleteHeight; y++)
-                        chunk.func_150807_a(x, y, z, Blocks.air, 0);
-                }
-            }
-        }
-
-        if(!blocked&&!isHole)
-        {
-            if(wrld.rand.nextDouble()<=BuildingSpawnChance)
-                BuildingGen.genereateBuidling(noiseValue,chunk,height);
-            else if(wrld.rand.nextDouble()<=featureSpawnchance)
-                BuildingGen.generateFeature(chunk,height);
-        }
-    }
-
-    private boolean checkIfHigher(Chunk chunk, int height)
-    {
-        int maxHeight=0;
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                if (maxHeight < chunk.getHeightValue(x, z))
-                    maxHeight = chunk.getHeightValue(x, z);
-            }
-        }
-
-        int localHeight = Math.min(maxHeight + stepHeight - maxHeight % stepHeight, maxGenerationHeight);
-
-        if(localHeight>height)
-            return true;
-        else
-            return false;
-    }
-
-    private boolean isStoned(Chunk chunk,int chunkX, int chunkZ, int height) {
-
-        int maxheight = 0;
-        double noiseValue = noiseGenerator.func_151601_a(chunkX * scale, chunkZ * scale);
-
-        if (noiseValue <= threshold)
-            return false;
-
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                if (maxheight < chunk.getHeightValue(x, z))
-                    maxheight = chunk.getHeightValue(x, z);
-
-                System.out.println(maxheight);
-
-                BiomeGenBase biome = wrld.getBiomeGenForCoords((chunkX << 4) + x, (chunkZ << 4) + z);
-
-                if (biome == BiomeGenBase.ocean ||
-                        biome == BiomeGenBase.deepOcean ||
-                        biome == BiomeGenBase.frozenOcean||
-                        biome == BiomeGenBase.extremeHills||
-                        biome == BiomeGenBase.extremeHillsEdge||
-                        biome == BiomeGenBase.extremeHillsPlus||
-                        biome == BiomeGenBase.savannaPlateau||
-                        biome == BiomeGenBase.mesaPlateau||
-                        biome == BiomeGenBase.mesaPlateau_F)
-                    return false;
-            }
-        }
-
-        int heightToCheck = Math.min(maxheight + stepHeight - maxheight % stepHeight, maxGenerationHeight);
-
-        if(maxheight>maxDeleteHeight)
-        {
-            heightToCheck=999; //temp value so that all terrain that is too high is connected
-            height=999;
-        }
-
-        if (height==heightToCheck)
-            return true;
-        else
-            return false;
+        if(!validCityPosition(chunkX,chunkZ)&&!validRoadPosition(chunkX,chunkZ))
+            super.populate(chunkProvider,chunkX,chunkZ);
     }
 }

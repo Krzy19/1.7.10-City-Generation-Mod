@@ -44,27 +44,13 @@ public class Materials
             Blocks.stained_hardened_clay,
             Blocks.stained_hardened_clay,
             Blocks.stained_hardened_clay,
-            Blocks.sandstone,
-            Blocks.brick_block,
-            Blocks.planks
+            Blocks.sandstone
     };
 
     public static final Block[] SUB_FLOOR = {
             Blocks.planks,
             Blocks.cobblestone,
             Blocks.wool
-    };
-
-    public static final Block[] SUB_ROOF={
-            Blocks.spruce_stairs,
-            Blocks.stone_brick_stairs,
-            Blocks.stone_stairs,
-            Blocks.acacia_stairs,
-            Blocks.oak_stairs,
-            Blocks.jungle_stairs,
-            Blocks.dark_oak_stairs,
-            Blocks.brick_stairs,
-            Blocks.nether_brick_stairs
     };
 
     //room

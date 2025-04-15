@@ -2,7 +2,9 @@ package com.github.krz19.WorldGen;
 
 import net.minecraft.block.*;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.BiomeManager;
 
 import java.util.Random;
 
@@ -25,7 +27,7 @@ public class BuildingGen {
     private static double suburbMaxTreshold=0.45;
     private static double mediumMaxTreshold=0.6;
 
-
+    private static final int FLOOR_HEIGHT=5;
 
     public enum cityArea {
         SUBURBS,
@@ -35,7 +37,7 @@ public class BuildingGen {
 
 
 
-    public static void genereateBuidling(double cityDensity, Chunk chunk, int height) {
+    public static void generateBuilding(double cityDensity, Chunk chunk, int height) {
 
         cityArea area = cityArea.HIGHRISE;
 
@@ -47,6 +49,11 @@ public class BuildingGen {
 
         switch (area) {
             case SUBURBS:
+                generateSuburb(chunk,height,
+                        SUB_WALLS[random.nextInt(SUB_WALLS.length)],
+                        WINDOWS[random.nextInt(WINDOWS.length)],
+                        SUB_FLOOR[random.nextInt(SUB_FLOOR.length)],
+                        ROOM_BLOCKADE_MAT[random.nextInt(ROOM_BLOCKADE_MAT.length)]);
                 break;
             case MEDIUM:
                 generateMidBuilding(chunk,minFloorsMedium+random.nextInt(maxFloorsMedium),height,
@@ -66,40 +73,30 @@ public class BuildingGen {
 
     public static void generateFeature(Chunk chunk,int height)
     {
-        int parkVariant=random.nextInt(3);
+        int parkVariant=random.nextInt(parkPattern.length);
         int leavesMeta=4+random.nextInt(3);
 
-        switch (parkVariant)
-        {
-            case 0:
-                for (int x = 0; x < 16; x++)
-                    for (int z = 0; z < 16; z++)
-                    {
-                        if(x>=2&&x<=13&&z>=2&&z<=13)
-                            chunk.func_150807_a(x, height-1, z, Blocks.grass, 0);
-                        if((x>=3&&x<=12&&z>=3&&z<=12)&&((x<=5||x>=10)||(z<=5||z>=10)))
-                            chunk.func_150807_a(x, height, z, Blocks.leaves, leavesMeta);
-                    }
-                break;
-            case 1:
-                for (int x = 0; x < 16; x++)
-                    for (int z = 0; z < 16; z++) {
-                        if ((x > 0 && x < 15 && z > 0 && z < 15) && ((x < 6 || x > 9) && (z < 6 || z > 9)))
-                            chunk.func_150807_a(x, height - 1, z, Blocks.grass, 0);
-                        if ((x > 1 && x < 14 && z > 1 && z < 14) && ((x < 5 || x > 10) && (z < 5 || z > 10)))
-                            chunk.func_150807_a(x, height, z, Blocks.leaves, leavesMeta);
-                    }
-                break;
-            case 2:
-                for (int x = 0; x < 16; x++)
-                    for (int z = 0; z < 16; z++) {
-                        if ((x > 0 && x < 15 && z > 0 && z < 15) && ((x < 5 || x > 10)))
-                            chunk.func_150807_a(x, height - 1, z, Blocks.grass, 0);
-                        if ((x >= 1 && x <= 14 && z >= 1 && z <= 14) && ((x < 4 || x > 11)))
-                            chunk.func_150807_a(x, height, z, Blocks.leaves, leavesMeta);
-                    }
-                break;
-        }
+        for(int x=1;x<=7;x++)
+            for(int z=1;z<=7;z++)
+            {
+                switch (parkPattern[parkVariant][x-1][z-1])
+                {
+                    case 2:
+                        chunk.func_150807_a(x, height, z, Blocks.leaves, leavesMeta);
+                        chunk.func_150807_a(15-x, height, z, Blocks.leaves, leavesMeta);
+                        chunk.func_150807_a(x, height, 15-z, Blocks.leaves, leavesMeta);
+                        chunk.func_150807_a(15-x, height, 15-z, Blocks.leaves, leavesMeta);
+                    case 1:
+                        chunk.func_150807_a(x, height-1, z, Blocks.grass, 0);
+                        chunk.func_150807_a(15-x, height-1, z, Blocks.grass, 0);
+                        chunk.func_150807_a(x, height-1, 15-z, Blocks.grass, 0);
+                        chunk.func_150807_a(15-x, height-1, 15-z, Blocks.grass, 0);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
     }
 
     private static void generateTallBuilding(Chunk chunk, int n_floors, int height,
@@ -138,20 +135,112 @@ public class BuildingGen {
 
         for (int x = 0; x < 16; x++)
             for (int z = 0; z < 16; z++)
-                for (int y = height - 1; y < n_floors * 5 + height; y++)
+                for (int y = height - 1; y < n_floors * FLOOR_HEIGHT + height; y++)
                 {
                     //basic structure
-                    if (y % 5 == 4)
+                    if (y % FLOOR_HEIGHT == 0)
                     {
                         if(x!=15 && x!=0 && z!=0 && z!=15)
                             chunk.func_150807_a(x, y, z, floorMaterial, floorMeta);
-                        if (y != n_floors * 5 + height - 1)
-                            generateRoom(chunk,y+1,roomPatternChoice,false,
+                        if (y != n_floors * FLOOR_HEIGHT + height - 1)
+                            generateRoom(chunk,y+1,roomPatternChoice,
                                     r_wall_mat,r_blockade_mat,r_stairs,r_wallMeta,r_blockadeMeta);
                     }
 
                     //roof
-                    if (y == n_floors * 5 + height - 1) {
+                    if (y == n_floors * FLOOR_HEIGHT + height - 1) {
+                        if (roofCorner && (x == 0 || x == 15 || z == 0 || z == 15))
+                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
+                        else
+                            chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
+                    }
+
+
+                    //walls
+                    if (y != height-1 && y != n_floors * FLOOR_HEIGHT + height - 1) {
+                        if (x == 0 || x == 15) {
+                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
+                            if (wallPattern[wallPatternChoice][z] == 1)
+                                if(fullGlass || y % FLOOR_HEIGHT != 0)
+                                    chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
+                        }
+                        if (z == 0 || z == 15) {
+                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
+                            if (wallPattern[wallPatternChoice][x] == 1)
+                                if(fullGlass || y % FLOOR_HEIGHT != 0)
+                                    chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
+                        }
+                    }
+                }
+
+        for(int i=0;i<2;i++)
+        {
+            chunk.func_150807_a(7, height+i, 15, Blocks.air, 0);
+            chunk.func_150807_a(8, height+i, 15, Blocks.air, 0);
+            chunk.func_150807_a(7, height+i, 0, Blocks.air, 0);
+            chunk.func_150807_a(8, height+i, 0, Blocks.air, 0);
+            chunk.func_150807_a(0, height+i, 7, Blocks.air, 0);
+            chunk.func_150807_a(0, height+i, 8, Blocks.air, 0);
+            chunk.func_150807_a(15, height+i, 7, Blocks.air, 0);
+            chunk.func_150807_a(15, height+i, 8, Blocks.air, 0);
+        }
+
+    }
+
+
+
+    private static void generateMidBuilding(Chunk chunk, int n_floors, int height,
+                                            Block wallMaterial, Block windowMaterial, Block floorMaterial)
+    {
+        //building params
+        int wallPatternChoice = random.nextInt(wallPattern.length);
+        int roomPatternChoice = random.nextInt(roomPattern.length);
+
+        boolean roofCorner= random.nextBoolean();
+        int wallMeta = 0;
+        int floorMeta = 0;
+        int windowMeta = 0;
+        int[] possibleGlassMeta = {0, 3, 7, 8, 9, 11, 15};
+        int[] possibleClayMeta={1,7,8,9,12,14,15};
+        int[] possibleWoolMeta={0,1,3,7,8,9,11,12,13,15};
+
+        //room_params
+        Block r_wall_mat=ROOM_WALL_MAT[random.nextInt(ROOM_WALL_MAT.length)];
+        Block r_blockade_mat=ROOM_BLOCKADE_MAT[random.nextInt(ROOM_BLOCKADE_MAT.length)];
+        Block r_stairs=STAIRS[random.nextInt(STAIRS.length)];
+
+        int[] wallChoices={0,1,3,7,8,9,11,12,13,14,15};
+        int r_wallMeta=wallChoices[random.nextInt(wallChoices.length)];
+        int r_blockadeMeta=0;
+
+        if (r_blockade_mat == Blocks.planks)
+            r_blockadeMeta = random.nextInt(5);
+
+        if (wallMaterial == Blocks.stained_hardened_clay)
+            wallMeta = possibleClayMeta[random.nextInt(possibleClayMeta.length)];
+        if (floorMaterial == Blocks.planks)
+            floorMeta = random.nextInt(5);
+        if(floorMaterial == Blocks.wool)
+            floorMeta = possibleWoolMeta[random.nextInt(possibleWoolMeta.length)];
+        if (windowMaterial == Blocks.stained_glass || windowMaterial == Blocks.stained_glass_pane)
+            windowMeta = possibleGlassMeta[random.nextInt(possibleGlassMeta.length)];
+
+        for (int x = 0; x < 16; x++)
+            for (int z = 0; z < 16; z++)
+                for (int y = height - 1; y < n_floors * 5 + height; y++)
+                {
+                    //basic structure
+                    if (y % FLOOR_HEIGHT == 0)
+                    {
+                        if(x!=15 && x!=0 && z!=0 && z!=15)
+                            chunk.func_150807_a(x, y, z, floorMaterial, floorMeta);
+                        if (y != n_floors * FLOOR_HEIGHT + height - 1)
+                            generateRoom(chunk,y+1,roomPatternChoice,
+                                    r_wall_mat,r_blockade_mat,r_stairs,r_wallMeta,r_blockadeMeta);
+                    }
+
+                    //roof
+                    if (y == n_floors * FLOOR_HEIGHT + height - 1) {
                         if (roofCorner && (x == 0 || x == 15 || z == 0 || z == 15))
                             chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
                         else
@@ -164,13 +253,13 @@ public class BuildingGen {
                         if (x == 0 || x == 15) {
                             chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
                             if (wallPattern[wallPatternChoice][z] == 1)
-                                if(fullGlass || y % 5 != 4)
+                                if( y % FLOOR_HEIGHT != 0 && y % FLOOR_HEIGHT != 1)
                                     chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
                         }
                         if (z == 0 || z == 15) {
                             chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
                             if (wallPattern[wallPatternChoice][x] == 1)
-                                if(fullGlass || y % 5 != 4)
+                                if( y % FLOOR_HEIGHT != 0 && y % FLOOR_HEIGHT != 1)
                                     chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
                         }
                     }
@@ -190,7 +279,7 @@ public class BuildingGen {
 
     }
 
-    private static void generateRoom(Chunk chunk,int height,int pattern,boolean flipped,
+    private static void generateRoom(Chunk chunk,int height,int pattern,
                                      Block wallMaterial, Block blockadeMaterial,Block stairsMaterial,
                                      int wallMeta,int blockadeMeta)
     {
@@ -223,92 +312,120 @@ public class BuildingGen {
             }
     }
 
-    private static void generateMidBuilding(Chunk chunk, int n_floors, int height,
-                                            Block wallMaterial, Block windowMaterial, Block floorMaterial)
+    private static void generateSuburb(Chunk chunk, int height,
+                                            Block wallMaterial, Block windowMaterial, Block floorMaterial,Block blockadeMaterial)
     {
-        //building params
-        int wallPatternChoice = random.nextInt(wallPattern.length);
-        int roomPatternChoice = random.nextInt(roomPattern.length);
+        int structureType= random.nextInt(suburbStructures.length);
 
-        boolean roofCorner= random.nextBoolean();
         int wallMeta = 0;
         int floorMeta = 0;
         int windowMeta = 0;
+        int blockadeMeta=0;
         int[] possibleGlassMeta = {0, 3, 7, 8, 9, 11, 15};
         int[] possibleClayMeta={1,7,8,9,12,14,15};
+        int[] possibleWoolMeta={0,1,3,7,8,9,11,12,13,15};
 
-        //room_params
-        Block r_wall_mat=ROOM_WALL_MAT[random.nextInt(ROOM_WALL_MAT.length)];
-        Block r_blockade_mat=ROOM_BLOCKADE_MAT[random.nextInt(ROOM_BLOCKADE_MAT.length)];
-        Block r_stairs=STAIRS[random.nextInt(STAIRS.length)];
-
-        int[] wallChoices={0,1,3,7,8,9,11,12,13,14,15};
-        int r_wallMeta=wallChoices[random.nextInt(wallChoices.length)];
-        int r_blockadeMeta=0;
-
-        if (r_blockade_mat == Blocks.planks)
-            r_blockadeMeta = random.nextInt(5);
-
-        if (wallMaterial == Blocks.stained_hardened_clay)
-            wallMeta = possibleClayMeta[random.nextInt(possibleClayMeta.length)];
-        if (floorMaterial == Blocks.planks)
-            floorMeta = random.nextInt(5);
-        if(floorMaterial == Blocks.wool)
-            floorMeta = random.nextInt(15);
+        if(wallMaterial==Blocks.stained_hardened_clay)
+            wallMeta=possibleClayMeta[random.nextInt(possibleClayMeta.length)];
+        if(floorMaterial==Blocks.wool)
+            floorMeta=possibleWoolMeta[random.nextInt(possibleClayMeta.length)];
+        if(floorMaterial==Blocks.planks)
+            floorMeta= random.nextInt(5);
         if (windowMaterial == Blocks.stained_glass || windowMaterial == Blocks.stained_glass_pane)
             windowMeta = possibleGlassMeta[random.nextInt(possibleGlassMeta.length)];
+        if (blockadeMaterial == Blocks.planks)
+            blockadeMeta = random.nextInt(5);
 
-        for (int x = 0; x < 16; x++)
-            for (int z = 0; z < 16; z++)
-                for (int y = height - 1; y < n_floors * 5 + height; y++)
+        for(int x=0;x<16;x++)
+            for(int z=0;z<16;z++)
+                chunk.func_150807_a(x, height-1, z, Blocks.grass, 0);
+
+        for(int x=2;x<15;x++)
+            for(int z=2;z<15;z++)
+            {
+                switch(suburbStructures[structureType][x-2][z-2])
                 {
-                    //basic structure
-                    if (y % 5 == 4)
-                    {
-                        if(x!=15 && x!=0 && z!=0 && z!=15)
-                            chunk.func_150807_a(x, y, z, floorMaterial, floorMeta);
-                        if (y != n_floors * 5 + height - 1)
-                            generateRoom(chunk,y+1,roomPatternChoice,false,
-                                    r_wall_mat,r_blockade_mat,r_stairs,r_wallMeta,r_blockadeMeta);
-                    }
-
-                    //roof
-                    if (y == n_floors * 5 + height - 1) {
-                        if (roofCorner && (x == 0 || x == 15 || z == 0 || z == 15))
-                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
-                        else
-                            chunk.func_150807_a(x, y, z, Blocks.stonebrick, 0);
-                    }
-
-
-                    //walls
-                    if (y != height-1 && y != n_floors * 5 + height - 1) {
-                        if (x == 0 || x == 15) {
-                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
-                            if (wallPattern[wallPatternChoice][z] == 1)
-                                if( y % 5 != 4 && y % 5 != 0)
-                                    chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
-                        }
-                        if (z == 0 || z == 15) {
-                            chunk.func_150807_a(x, y, z, wallMaterial, wallMeta);
-                            if (wallPattern[wallPatternChoice][x] == 1)
-                                if( y % 5 != 4 && y % 5 != 0)
-                                    chunk.func_150807_a(x, y, z, windowMaterial, windowMeta);
-                        }
-                    }
+                    case 0:
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 1:
+                        chunk.func_150807_a(x, height, z, wallMaterial, wallMeta);
+                        chunk.func_150807_a(x, height+1, z, wallMaterial, wallMeta);
+                        chunk.func_150807_a(x, height+2, z, wallMaterial, wallMeta);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 2:
+                        chunk.func_150807_a(x, height, z, wallMaterial, wallMeta);
+                        chunk.func_150807_a(x, height+1, z, windowMaterial, windowMeta);
+                        chunk.func_150807_a(x, height+2, z, windowMaterial, windowMeta);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 3:
+                        chunk.func_150807_a(x, height+2, z, wallMaterial, wallMeta);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 4:
+                        chunk.func_150807_a(x, height, z, blockadeMaterial, blockadeMeta);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 5:
+                        chunk.func_150807_a(x, height, z, Blocks.crafting_table, 0);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 6:
+                        chunk.func_150807_a(x, height, z, Blocks.furnace, 0);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 7:
+                        chunk.func_150807_a(x, height, z, Blocks.bed, 0);
+                        chunk.func_150807_a(x, height, z+1, Blocks.bed, 8);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 8:
+                        chunk.func_150807_a(x, height, z, Blocks.cauldron, 0);
+                        chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    default:
+                        break;
                 }
+                            }
 
-        for(int i=0;i<2;i++)
-        {
-            chunk.func_150807_a(7, height+i, 15, Blocks.air, wallMeta);
-            chunk.func_150807_a(8, height+i, 15, Blocks.air, wallMeta);
-            chunk.func_150807_a(7, height+i, 0, Blocks.air, wallMeta);
-            chunk.func_150807_a(8, height+i, 0, Blocks.air, wallMeta);
-            chunk.func_150807_a(0, height+i, 7, Blocks.air, wallMeta);
-            chunk.func_150807_a(0, height+i, 8, Blocks.air, wallMeta);
-            chunk.func_150807_a(15, height+i, 7, Blocks.air, wallMeta);
-            chunk.func_150807_a(15, height+i, 8, Blocks.air, wallMeta);
-        }
+        //roof
+        for(int x=2;x<15;x++)
+            for(int z=2;z<15;z++)
+            {
+                int sx=x-2;
+                int sz=z-2;
+                if(suburbStructures[structureType][sx][sz]!=9)
+                    chunk.func_150807_a(x, height+3, z, Blocks.brick_block, 0);
+
+                if(z>2&&x>2&&x<14&&z<14)
+                {
+                    if(suburbStructures[structureType][sx-1][sz-1]!=9&&
+                            suburbStructures[structureType][sx][sz-1]!=9&&
+                            suburbStructures[structureType][sx+1][sz-1]!=9&&
+                            suburbStructures[structureType][sx-1][sz]!=9&&
+                            suburbStructures[structureType][sx+1][sz]!=9&&
+                            suburbStructures[structureType][sx-1][sz+1]!=9&&
+                            suburbStructures[structureType][sx][sz+1]!=9&&
+                            suburbStructures[structureType][sx+1][sz+1]!=9
+                    )
+                        chunk.func_150807_a(x, height+4, z, Blocks.stone_slab, 4);
+
+                    if(suburbStructures[structureType][sx][sz]==9)
+                        if(suburbStructures[structureType][sx-1][sz-1]!=9||
+                                suburbStructures[structureType][sx][sz-1]!=9||
+                                suburbStructures[structureType][sx+1][sz-1]!=9||
+                                suburbStructures[structureType][sx-1][sz]!=9||
+                                suburbStructures[structureType][sx+1][sz]!=9||
+                                suburbStructures[structureType][sx-1][sz+1]!=9||
+                                suburbStructures[structureType][sx][sz+1]!=9||
+                                suburbStructures[structureType][sx+1][sz+1]!=9
+                        )
+                            chunk.func_150807_a(x, height+3, z, Blocks.stone_slab, 4);
+                }
+            }
+
 
     }
 }
