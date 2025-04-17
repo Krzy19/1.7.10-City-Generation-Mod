@@ -24,8 +24,8 @@ public class BuildingGen {
     public static int getMinFloorsSub=1;
     public static int maxFloorsSub=2;
    
-    private static double suburbMaxTreshold=0.45;
-    private static double mediumMaxTreshold=0.6;
+    private static double suburbMaxTreshold=0.5;
+    private static double mediumMaxTreshold=0.7;
 
     private static final int FLOOR_HEIGHT=5;
 
@@ -312,6 +312,17 @@ public class BuildingGen {
             }
     }
 
+    static boolean suburbEmptyCheck(int structureType, int x, int z)
+    {
+        int sx=x-2;
+        int sz=z-2;
+
+        if(x>=2&&x<=14&&z>=2&&z<=14)
+            return suburbStructures[structureType][sx][sz]==9;
+
+        return true;
+    }
+
     private static void generateSuburb(Chunk chunk, int height,
                                             Block wallMaterial, Block windowMaterial, Block floorMaterial,Block blockadeMaterial)
     {
@@ -397,7 +408,26 @@ public class BuildingGen {
                 int sx=x-2;
                 int sz=z-2;
                 if(suburbStructures[structureType][sx][sz]!=9)
+                {
                     chunk.func_150807_a(x, height+3, z, Blocks.brick_block, 0);
+
+                    if(suburbEmptyCheck(structureType,x-1,z-1))
+                        chunk.func_150807_a(x-1, height+3, z-1, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x-1,z))
+                        chunk.func_150807_a(x-1, height+3, z, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x-1,z+1))
+                        chunk.func_150807_a(x-1, height+3, z+1, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x,z-1))
+                        chunk.func_150807_a(x, height+3, z-1, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x,z+1))
+                        chunk.func_150807_a(x, height+3, z+1, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x+1,z-1))
+                        chunk.func_150807_a(x+1, height+3, z-1, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x+1,z))
+                        chunk.func_150807_a(x+1, height+3, z, Blocks.stone_slab, 4);
+                    if(suburbEmptyCheck(structureType,x+1,z+1))
+                        chunk.func_150807_a(x+1, height+3, z+1, Blocks.stone_slab, 4);
+                }
 
                 if(z>2&&x>2&&x<14&&z<14)
                 {
@@ -410,23 +440,12 @@ public class BuildingGen {
                             suburbStructures[structureType][sx][sz+1]!=9&&
                             suburbStructures[structureType][sx+1][sz+1]!=9
                     )
+                    {
                         chunk.func_150807_a(x, height+4, z, Blocks.stone_slab, 4);
-
-                    if(suburbStructures[structureType][sx][sz]==9)
-                        if(suburbStructures[structureType][sx-1][sz-1]!=9||
-                                suburbStructures[structureType][sx][sz-1]!=9||
-                                suburbStructures[structureType][sx+1][sz-1]!=9||
-                                suburbStructures[structureType][sx-1][sz]!=9||
-                                suburbStructures[structureType][sx+1][sz]!=9||
-                                suburbStructures[structureType][sx-1][sz+1]!=9||
-                                suburbStructures[structureType][sx][sz+1]!=9||
-                                suburbStructures[structureType][sx+1][sz+1]!=9
-                        )
-                            chunk.func_150807_a(x, height+3, z, Blocks.stone_slab, 4);
+                        chunk.func_150807_a(x, height+3, z, Blocks.planks, 0);
+                    }
                 }
             }
-
-
     }
 }
 

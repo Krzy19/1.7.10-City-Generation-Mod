@@ -11,19 +11,21 @@ import org.lwjgl.Sys;
 
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class CitiesGenChunkProvider extends ChunkProviderGenerate
 {
     final int CHUNK_PACK_SIZE=5;
-    final double BUILDING_SPAWN_CHANCE=0.6;
+    final double BUILDING_SPAWN_CHANCE=0.9;
     final double FEATURE_SPAWN_CHANCE=0.1;
 
     public World world;
-    private NoiseGeneratorPerlin cityNoise;
+    private final NoiseGeneratorPerlin cityNoise;
 
-    private double citySpawnThreshold=0.35;
-    private double cityNoiseScale=0.025;
+    private final double citySpawnThreshold=0.35;
+    private final double cityNoiseScale=0.025;
 
-    private int baseCityHeight=70;
+    private final int baseCityHeight=70;
 
     private static final BiomeGenBase[] blacklistedBiomes={
             BiomeGenBase.deepOcean,BiomeGenBase.ocean,BiomeGenBase.frozenOcean,
@@ -120,7 +122,11 @@ public class CitiesGenChunkProvider extends ChunkProviderGenerate
         }
 
         //Building Generation
-        if(world.rand.nextDouble()<=BUILDING_SPAWN_CHANCE)
+        if((abs(chunk.xPosition%CHUNK_PACK_SIZE)==1||
+                abs(chunk.xPosition%CHUNK_PACK_SIZE)==4||
+                abs(chunk.zPosition%CHUNK_PACK_SIZE)==1||
+                abs(chunk.zPosition%CHUNK_PACK_SIZE)==4)&&
+                world.rand.nextDouble()<=BUILDING_SPAWN_CHANCE)
             BuildingGen.generateBuilding(cityNoisePack(chunk.xPosition,chunk.zPosition),chunk,baseCityHeight+1);
         else if(world.rand.nextDouble()<=FEATURE_SPAWN_CHANCE)
             BuildingGen.generateFeature(chunk,baseCityHeight+1);
