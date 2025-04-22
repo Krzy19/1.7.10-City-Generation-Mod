@@ -3,8 +3,7 @@ package com.github.krz19.WorldGen;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.layer.GenLayer;
-import net.minecraft.world.gen.layer.GenLayerBiome;
+import net.minecraft.world.gen.layer.*;
 
 public class WorldGenCities extends WorldType{
 
@@ -15,7 +14,13 @@ public class WorldGenCities extends WorldType{
     @Override
     public GenLayer getBiomeLayer(long seed, GenLayer parentLayer)
     {
-        return new GenLayerBiome(seed,parentLayer,this);
+        GenLayer layer=new GenLayerBiome(seed,parentLayer,this);
+
+        layer = GenLayerZoom.magnify(seed,layer,3);
+
+        layer= new GenLayerBiomeEdge(seed,layer);
+
+        return layer;
     }
 
     @Override

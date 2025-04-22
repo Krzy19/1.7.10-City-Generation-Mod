@@ -175,10 +175,12 @@ public class CitiesGenChunkProvider extends ChunkProviderGenerate
         }
     }
 
+    /*
     private int calculateHeight(Chunk chunk)
     {
         return 0;
     }
+     */
 
     @Override
     public void populate(IChunkProvider chunkProvider, int chunkX, int chunkZ) {

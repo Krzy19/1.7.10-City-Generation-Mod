@@ -11,9 +11,9 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0"
-group= "com.krzy19.roadmod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "roadmod"
+version = "0.0.5"
+group= "com.krzy19.abandonedCitiesMod" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "abandonedCitiesMod"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
