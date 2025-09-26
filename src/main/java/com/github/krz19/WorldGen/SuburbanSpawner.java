@@ -7,16 +7,10 @@ import net.minecraft.world.chunk.Chunk;
 import java.util.Random;
 
 import static com.github.krz19.WorldGen.StructureDefs.suburbStructures;
+import static com.github.krz19.WorldGen.BuildingGen.random;
 
 public class SuburbanSpawner
 {
-    private static Random random;
-
-    public  SuburbanSpawner(Random random)
-    {
-        this.random=random;
-    }
-
     static boolean suburbEmptyCheck(int structureType, int x, int z)
     {
         int sx=x-2;
@@ -100,6 +94,9 @@ public class SuburbanSpawner
                     case 8:
                         chunk.func_150807_a(x, height, z, Blocks.cauldron, 0);
                         chunk.func_150807_a(x, height-1, z, floorMaterial, floorMeta);
+                        break;
+                    case 10:
+                        chunk.func_150807_a(x, height-1, z, Blocks.cobblestone, 0);
                         break;
                     default:
                         break;

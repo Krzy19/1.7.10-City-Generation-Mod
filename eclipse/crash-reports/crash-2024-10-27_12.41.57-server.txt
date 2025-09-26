@@ -1,0 +1,99 @@
+---- Minecraft Crash Report ----
+// Surprise! Haha. Well, this is awkward.
+
+Time: 27.10.24 12:41
+Description: Exception getting block type in world
+
+java.lang.NullPointerException: Exception getting block type in world
+	at net.minecraft.world.gen.MapGenBase.func_151539_a(SourceFile:21)
+	at com.github.krz19.world.gen.MyChunkProvider.recreateStructures(MyChunkProvider.java:63)
+	at net.minecraftforge.common.chunkio.ChunkIOProvider.callStage2(ChunkIOProvider.java:49)
+	at net.minecraftforge.common.chunkio.ChunkIOProvider.callStage2(ChunkIOProvider.java:12)
+	at net.minecraftforge.common.util.AsynchronousExecutor.skipQueue(AsynchronousExecutor.java:344)
+	at net.minecraftforge.common.util.AsynchronousExecutor.getSkipQueue(AsynchronousExecutor.java:302)
+	at net.minecraftforge.common.chunkio.ChunkIOExecutor.syncChunkLoad(ChunkIOExecutor.java:12)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:126)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:101)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:199)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:419)
+	at net.minecraft.world.World.getBlock(World.java:345)
+	at net.minecraft.block.BlockGrass.updateTick(BlockGrass.java:57)
+	at net.minecraft.world.WorldServer.func_147456_g(WorldServer.java:391)
+	at net.minecraft.world.WorldServer.tick(WorldServer.java:183)
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:625)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:547)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:111)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:427)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:685)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.world.gen.MapGenBase.func_151539_a(SourceFile:21)
+	at com.github.krz19.world.gen.MyChunkProvider.recreateStructures(MyChunkProvider.java:63)
+	at net.minecraftforge.common.chunkio.ChunkIOProvider.callStage2(ChunkIOProvider.java:49)
+	at net.minecraftforge.common.chunkio.ChunkIOProvider.callStage2(ChunkIOProvider.java:12)
+	at net.minecraftforge.common.util.AsynchronousExecutor.skipQueue(AsynchronousExecutor.java:344)
+	at net.minecraftforge.common.util.AsynchronousExecutor.getSkipQueue(AsynchronousExecutor.java:302)
+	at net.minecraftforge.common.chunkio.ChunkIOExecutor.syncChunkLoad(ChunkIOExecutor.java:12)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:126)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:101)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:199)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:419)
+
+-- Requested block coordinates --
+Details:
+	Found chunk: true
+	Location: World: (-38,66,79), Chunk: (at 10,4,15 in -3,4; contains blocks -48,0,64 to -33,255,79), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+Stacktrace:
+	at net.minecraft.world.World.getBlock(World.java:345)
+	at net.minecraft.block.BlockGrass.updateTick(BlockGrass.java:57)
+	at net.minecraft.world.WorldServer.func_147456_g(WorldServer.java:391)
+	at net.minecraft.world.WorldServer.tick(WorldServer.java:183)
+
+-- Affected level --
+Details:
+	Level name: p0rcod10
+	All players: 1 total; [EntityPlayerMP['Player328'/309, l='p0rcod10', x=25,60, y=111,11, z=278,55]]
+	Chunk stats: ServerChunkCache: 667 Drop: 0
+	Level seed: 4456616143956108370
+	Level generator: ID 04 - TestWorld, ver 0. Features enabled: true
+	Level generator options: 
+	Level spawn location: World: (27,64,271), Chunk: (at 11,4,15 in 1,16; contains blocks 16,0,256 to 31,255,271), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 338 game time, 338 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 27675 (now: false), thunder time: 27486 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.updateTimeLightAndEntities(MinecraftServer.java:625)
+	at net.minecraft.server.MinecraftServer.tick(MinecraftServer.java:547)
+	at net.minecraft.server.integrated.IntegratedServer.tick(IntegratedServer.java:111)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:427)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:685)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_422, BellSoft
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), BellSoft
+	Memory: 661326808 bytes (630 MB) / 1027080192 bytes (979 MB) up to 2837446656 bytes (2706 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 1, tcache: 1, allocated: 12, tallocated: 94
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 4 mods loaded, 4 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeBin-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeBin-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	RoadMod{0.0.1} [Road Generation Mod] (roadmod-1.0.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Player Count: 1 / 8; [EntityPlayerMP['Player328'/309, l='p0rcod10', x=25,60, y=111,11, z=278,55]]
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'

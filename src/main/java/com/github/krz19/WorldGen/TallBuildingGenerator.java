@@ -7,6 +7,7 @@ import net.minecraft.world.chunk.Chunk;
 import java.util.Random;
 
 import static com.github.krz19.WorldGen.BuildingGen.FLOOR_HEIGHT;
+import static com.github.krz19.WorldGen.BuildingGen.random;
 import static com.github.krz19.WorldGen.Materials.*;
 import static com.github.krz19.WorldGen.RoomGenerator.generateRoom;
 import static com.github.krz19.WorldGen.StructureDefs.roomPattern;
@@ -14,14 +15,6 @@ import static com.github.krz19.WorldGen.StructureDefs.wallPattern;
 
 public class TallBuildingGenerator
 {
-    private static Random random;
-
-
-    public  TallBuildingGenerator(Random random)
-    {
-        this.random=random;
-    }
-
     public static void generateTallBuilding(Chunk chunk, int n_floors, int height,
                                              Block wallMaterial, Block windowMaterial, Block floorMaterial)
     {
@@ -98,14 +91,23 @@ public class TallBuildingGenerator
 
         for(int i=0;i<2;i++)
         {
-            chunk.func_150807_a(7, height+i, 15, Blocks.air, 0);
-            chunk.func_150807_a(8, height+i, 15, Blocks.air, 0);
-            chunk.func_150807_a(7, height+i, 0, Blocks.air, 0);
-            chunk.func_150807_a(8, height+i, 0, Blocks.air, 0);
-            chunk.func_150807_a(0, height+i, 7, Blocks.air, 0);
-            chunk.func_150807_a(0, height+i, 8, Blocks.air, 0);
-            chunk.func_150807_a(15, height+i, 7, Blocks.air, 0);
-            chunk.func_150807_a(15, height+i, 8, Blocks.air, 0);
+            int southMeta = (i == 0 ? 1 : 0);
+            int northMeta = (i == 0 ? 3 : 0);
+            int westMeta  = (i == 0 ? 2 : 0);
+            int eastMeta  = 0;
+
+
+            chunk.func_150807_a(7, height + i, 15, Blocks.wooden_door, (i == 0 ? southMeta : 9));
+            chunk.func_150807_a(8, height + i, 15, Blocks.wooden_door, (i == 0 ? southMeta : 8));
+
+            chunk.func_150807_a(7, height + i, 0, Blocks.wooden_door, (i == 0 ? northMeta : 8));
+            chunk.func_150807_a(8, height + i, 0, Blocks.wooden_door, (i == 0 ? northMeta : 9));
+
+            chunk.func_150807_a(0, height + i, 7, Blocks.wooden_door, (i == 0 ? westMeta : 9));
+            chunk.func_150807_a(0, height + i, 8, Blocks.wooden_door, (i == 0 ? westMeta : 8));
+
+            chunk.func_150807_a(15, height + i, 7, Blocks.wooden_door, (i == 0 ? eastMeta : 8));
+            chunk.func_150807_a(15, height + i, 8, Blocks.wooden_door, (i == 0 ? eastMeta : 9));
         }
 
     }

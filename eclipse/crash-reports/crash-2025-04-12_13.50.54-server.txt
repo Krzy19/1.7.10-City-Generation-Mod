@@ -1,0 +1,107 @@
+---- Minecraft Crash Report ----
+// Uh... Did I do that?
+
+Time: 12.04.25 13:50
+Description: Exception generating new chunk
+
+java.lang.ArrayIndexOutOfBoundsException: 13
+	at com.github.krz19.WorldGen.BuildingGen.generateSuburb(BuildingGen.java:342)
+	at com.github.krz19.WorldGen.BuildingGen.generateBuilding(BuildingGen.java:52)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.fillPlatform(CitiesGenChunkProvider.java:124)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.provideChunk(CitiesGenChunkProvider.java:51)
+	at net.minecraft.world.gen.ChunkProviderServer.originalLoadChunk(ChunkProviderServer.java:190)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:149)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:119)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:221)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:482)
+	at net.minecraft.world.World.getBlock(World.java:387)
+	at net.minecraft.world.World.isAirBlock(World.java:410)
+	at net.minecraft.world.World.getTopBlock(World.java:371)
+	at net.minecraft.world.WorldProvider.canCoordinateBeSpawn(WorldProvider.java:93)
+	at net.minecraft.world.WorldServer.createSpawnPosition(WorldServer.java:794)
+	at net.minecraft.world.WorldServer.initialize(WorldServer.java:757)
+	at net.minecraft.world.World.<init>(World.java:296)
+	at net.minecraft.world.WorldServer.<init>(WorldServer.java:102)
+	at net.minecraft.server.integrated.IntegratedServer.loadAllWorlds(IntegratedServer.java:63)
+	at net.minecraft.server.integrated.IntegratedServer.startServer(IntegratedServer.java:96)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:445)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at com.github.krz19.WorldGen.BuildingGen.generateSuburb(BuildingGen.java:342)
+	at com.github.krz19.WorldGen.BuildingGen.generateBuilding(BuildingGen.java:52)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.fillPlatform(CitiesGenChunkProvider.java:124)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.provideChunk(CitiesGenChunkProvider.java:51)
+
+-- Chunk to be generated --
+Details:
+	Location: -1,-4
+	Position hash: -12884901889
+	Generator: RandomLevelSource
+Stacktrace:
+	at net.minecraft.world.gen.ChunkProviderServer.originalLoadChunk(ChunkProviderServer.java:190)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:149)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:119)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:221)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:482)
+
+-- Requested block coordinates --
+Details:
+	Found chunk: true
+	Location: World: (-9,64,-55), Chunk: (at 7,4,9 in -1,-4; contains blocks -16,0,-64 to -1,255,-49), Region: (-1,-1; contains chunks -32,-32 to -1,-1, blocks -512,0,-512 to -1,255,-1)
+Stacktrace:
+	at net.minecraft.world.World.getBlock(World.java:387)
+	at net.minecraft.world.World.isAirBlock(World.java:410)
+	at net.minecraft.world.World.getTopBlock(World.java:371)
+	at net.minecraft.world.WorldProvider.canCoordinateBeSpawn(WorldProvider.java:93)
+	at net.minecraft.world.WorldServer.createSpawnPosition(WorldServer.java:794)
+	at net.minecraft.world.WorldServer.initialize(WorldServer.java:757)
+
+-- Affected level --
+Details:
+	Level name: cummer
+	All players: 0 total; []
+	Chunk stats: ServerChunkCache: 5 Drop: 0
+	Level seed: -2247053628183369496
+	Level generator: ID 04 - AbandonedCities, ver 0. Features enabled: true
+	Level generator options: 
+	Level spawn location: World: (0,0,0), Chunk: (at 0,0,0 in 0,0; contains blocks 0,0,0 to 15,255,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 0 game time, 0 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.world.World.<init>(World.java:296)
+	at net.minecraft.world.WorldServer.<init>(WorldServer.java:102)
+	at net.minecraft.server.integrated.IntegratedServer.loadAllWorlds(IntegratedServer.java:63)
+	at net.minecraft.server.integrated.IntegratedServer.startServer(IntegratedServer.java:96)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:445)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:752)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_422, BellSoft
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), BellSoft
+	Memory: 520408048 bytes (496 MB) / 710934528 bytes (678 MB) up to 2837446656 bytes (2706 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 90
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 4 mods loaded, 4 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAA	CityGenMod{ALPHA 0.0.001} [City Generation Mod] (roadmod-1.0.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Player Count: 0 / 8; []
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'

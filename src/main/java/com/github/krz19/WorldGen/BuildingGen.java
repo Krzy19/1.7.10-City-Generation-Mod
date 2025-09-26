@@ -12,7 +12,7 @@ import static com.github.krz19.WorldGen.SuburbanSpawner.*;
 import static com.github.krz19.WorldGen.TallBuildingGenerator.*;
 
 public class BuildingGen {
-    private static final Random random = new Random();
+    public static final Random random = new Random();
 
     //building gen parameters
     public static int minFloorsHigh=1;

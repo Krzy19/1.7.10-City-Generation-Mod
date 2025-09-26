@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e37d8947-893f-4bb9-a98e-7a344e2ef616" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/MultiChunkStructureGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/lib/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/forge-1.7.10-10.13.4.1614-1.7.10-src.api.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/forge-1.7.10-10.13.4.1614-1.7.10-src.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/forge-1.7.10-10.13.4.1614-1.7.10-src.test.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/BuildingGen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/BuildingGen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/CitiesGenChunkProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/CitiesGenChunkProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/MidBuildingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/MidBuildingGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/StructureDefs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/StructureDefs.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/SuburbanSpawner.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/SuburbanSpawner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/TallBuildingGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/TallBuildingGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/WorldGenCities.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/github/krz19/WorldGen/WorldGenCities.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Krzy19"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Krzy19/1.7.10-City-Generation-Mod.git",
+    "accountId": "062deb5c-9044-45dc-a03d-7fa6c27d3e67"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="33EPTAcstXc094IYZnrCZjZV1hT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e37d8947-893f-4bb9-a98e-7a344e2ef616" name="Changes" comment="" />
+      <created>1758879265482</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758879265482</updated>
+    </task>
+    <servers />
+  </component>
+</project>

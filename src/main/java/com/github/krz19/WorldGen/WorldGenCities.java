@@ -26,6 +26,7 @@ public class WorldGenCities extends WorldType{
     @Override
     public IChunkProvider getChunkGenerator(World world, String generatorOptions)
     {
-        return new CitiesGenChunkProvider(world, world.getSeed());
+        MultiChunkStructureGenerator multiChunkStructureGenerator = new MultiChunkStructureGenerator(world);
+        return new CitiesGenChunkProvider(world, world.getSeed(), multiChunkStructureGenerator);
     }
 }

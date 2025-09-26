@@ -1,0 +1,111 @@
+---- Minecraft Crash Report ----
+// Who set us up the TNT?
+
+Time: 31.03.25 20:30
+Description: Exception generating new chunk
+
+java.lang.ArrayIndexOutOfBoundsException: -72
+	at net.minecraft.world.chunk.Chunk.func_150807_a(Chunk.java:556)
+	at com.github.krz19.WorldGen.BuildingGen.generateRoom(BuildingGen.java:260)
+	at com.github.krz19.WorldGen.BuildingGen.generateTallBuilding(BuildingGen.java:211)
+	at com.github.krz19.WorldGen.BuildingGen.genereateBuidling(BuildingGen.java:119)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.fillChunkWithStone(CitiesGenChunkProvider.java:162)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.provideChunk(CitiesGenChunkProvider.java:73)
+	at net.minecraft.world.gen.ChunkProviderServer.originalLoadChunk(ChunkProviderServer.java:172)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:131)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:101)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:199)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:419)
+	at net.minecraft.world.World.getBlock(World.java:345)
+	at net.minecraft.world.World.isAirBlock(World.java:365)
+	at net.minecraft.world.World.getTopBlock(World.java:329)
+	at net.minecraft.world.WorldProvider.canCoordinateBeSpawn(WorldProvider.java:71)
+	at net.minecraft.world.WorldServer.createSpawnPosition(WorldServer.java:749)
+	at net.minecraft.world.WorldServer.initialize(WorldServer.java:715)
+	at net.minecraft.world.World.<init>(World.java:260)
+	at net.minecraft.world.WorldServer.<init>(WorldServer.java:97)
+	at net.minecraft.server.integrated.IntegratedServer.loadAllWorlds(IntegratedServer.java:62)
+	at net.minecraft.server.integrated.IntegratedServer.startServer(IntegratedServer.java:92)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:387)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:685)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.world.chunk.Chunk.func_150807_a(Chunk.java:556)
+	at com.github.krz19.WorldGen.BuildingGen.generateRoom(BuildingGen.java:260)
+	at com.github.krz19.WorldGen.BuildingGen.generateTallBuilding(BuildingGen.java:211)
+	at com.github.krz19.WorldGen.BuildingGen.genereateBuidling(BuildingGen.java:119)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.fillChunkWithStone(CitiesGenChunkProvider.java:162)
+	at com.github.krz19.WorldGen.CitiesGenChunkProvider.provideChunk(CitiesGenChunkProvider.java:73)
+
+-- Chunk to be generated --
+Details:
+	Location: 13,15
+	Position hash: 64424509453
+	Generator: RandomLevelSource
+Stacktrace:
+	at net.minecraft.world.gen.ChunkProviderServer.originalLoadChunk(ChunkProviderServer.java:172)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:131)
+	at net.minecraft.world.gen.ChunkProviderServer.loadChunk(ChunkProviderServer.java:101)
+	at net.minecraft.world.gen.ChunkProviderServer.provideChunk(ChunkProviderServer.java:199)
+	at net.minecraft.world.World.getChunkFromChunkCoords(World.java:419)
+
+-- Requested block coordinates --
+Details:
+	Found chunk: true
+	Location: World: (222,64,251), Chunk: (at 14,4,11 in 13,15; contains blocks 208,0,240 to 223,255,255), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+Stacktrace:
+	at net.minecraft.world.World.getBlock(World.java:345)
+	at net.minecraft.world.World.isAirBlock(World.java:365)
+	at net.minecraft.world.World.getTopBlock(World.java:329)
+	at net.minecraft.world.WorldProvider.canCoordinateBeSpawn(WorldProvider.java:71)
+	at net.minecraft.world.WorldServer.createSpawnPosition(WorldServer.java:749)
+	at net.minecraft.world.WorldServer.initialize(WorldServer.java:715)
+
+-- Affected level --
+Details:
+	Level name: slavery
+	All players: 0 total; []
+	Chunk stats: ServerChunkCache: 2 Drop: 0
+	Level seed: 1274732976442867412
+	Level generator: ID 04 - AbandonedCities, ver 0. Features enabled: true
+	Level generator options: 
+	Level spawn location: World: (0,0,0), Chunk: (at 0,0,0 in 0,0; contains blocks 0,0,0 to 15,255,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 0 game time, 0 day time
+	Level dimension: 0
+	Level storage version: 0x04ABD - Anvil
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+Stacktrace:
+	at net.minecraft.world.World.<init>(World.java:260)
+	at net.minecraft.world.WorldServer.<init>(WorldServer.java:97)
+	at net.minecraft.server.integrated.IntegratedServer.loadAllWorlds(IntegratedServer.java:62)
+	at net.minecraft.server.integrated.IntegratedServer.startServer(IntegratedServer.java:92)
+	at net.minecraft.server.MinecraftServer.run(MinecraftServer.java:387)
+	at net.minecraft.server.MinecraftServer$2.run(MinecraftServer.java:685)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_422, BellSoft
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), BellSoft
+	Memory: 531978584 bytes (507 MB) / 707264512 bytes (674 MB) up to 2837446656 bytes (2706 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 14, tcache: 87, allocated: 0, tallocated: 0
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 4 mods loaded, 4 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAA	FML{7.10.99.99} [Forge Mod Loader] (forgeBin-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeBin-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAA	CityGenMod{ALPHA 0.0.001} [City Generation Mod] (roadmod-1.0.jar) 
+	GL info: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	Profiler Position: N/A (disabled)
+	Player Count: 0 / 8; []
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
